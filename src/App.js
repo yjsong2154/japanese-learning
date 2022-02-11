@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import styled from 'styled-components';
-import { hiragana, hiraganaHard } from './data.js';
+import data from './data.js';
 
 function App() {
-	const [ dict, setDict ] = useState(hiragana);
+	const [ dict, setDict ] = useState(data['hiragana']);
 	const [ ranLetter, setRanLetter ] = useState('あ');
 	const [ ans, setAns ] = useState('');
 	const [ isCorrect, setIsCorrect ] = useState('');
 	const [ ansColor, setAnsColor ] = useState('forestgreen');
 	const [ isShow, setIsShow ] = useState(false);
+
+	useEffect(
+		() => {
+			nextLetter();
+		},
+		[ dict ]
+	);
 
 	const nextLetter = () => {
 		var letterArr = Object.keys(dict);
@@ -20,7 +27,7 @@ function App() {
 		if (!isShow) {
 			if (dict[ranLetter] === ans) {
 				setAnsColor('forestgreen');
-				setIsCorrect('장답');
+				setIsCorrect('정답');
 			} else {
 				setAnsColor('crimson');
 				setIsCorrect('오답 : ' + dict[ranLetter]);
@@ -31,6 +38,12 @@ function App() {
 			setIsShow(false);
 			setAns('');
 		}
+	};
+
+	const handleDict = (e) => {
+		setDict(data[e.target.id], console.log(dict));
+		setIsShow(false);
+		setAns('');
 	};
 
 	const handleEnter = (e) => {
@@ -46,6 +59,14 @@ function App() {
 	return (
 		<Background>
 			<Title>일본어 연습기</Title>
+			<SelectBox>
+				<SelectButton id="hiragana" onClick={handleDict}>
+					히라가나
+				</SelectButton>
+				<SelectButton id="gatagana" onClick={handleDict}>
+					가타가나
+				</SelectButton>
+			</SelectBox>
 			<Letter>{ranLetter}</Letter>
 			<Correct color={ansColor}>{isShow ? isCorrect : ''}</Correct>
 			<InputBox>
@@ -67,8 +88,26 @@ const Background = styled.div`
 
 const Title = styled.div`
 	display: flex;
-	height: 20%;
+	height: 30px;
 	width: 100%;
+	font-size: 20px;
+	justify-content: center;
+	align-items: center;
+`;
+
+const SelectBox = styled.div`
+	display: flex;
+	flex-direction: row;
+	height: 60px;
+	width: 100%;
+	justify-content: center;
+	align-items: center;
+`;
+
+const SelectButton = styled.button`
+	display: flex;
+	height: 40px;
+	width: 25%;
 	font-size: 20px;
 	justify-content: center;
 	align-items: center;
@@ -85,7 +124,7 @@ const Letter = styled.div`
 
 const Correct = styled.div`
 	display: flex;
-	height: 40px;
+	height: 100px;
 	width: 100%;
 	font-size: 30px;
 	justify-content: center;
@@ -96,7 +135,7 @@ const Correct = styled.div`
 const InputBox = styled.div`
 	display: flex;
 	flex-direction: row;
-	height: 20%;
+	height: 60px;
 	width: 100%;
 	justify-content: center;
 	align-items: center;
@@ -105,7 +144,7 @@ const InputBox = styled.div`
 const Input = styled.input`
 	display: flex;
 	height: 50px;
-	width: 70%;
+	width: 60%;
 	max-width: 400px;
 	padding-left: 10px;
 	font-size: 30px;
@@ -118,7 +157,8 @@ const Button = styled.button`
 	height: 50px;
 	width: 20%;
 	max-width: 150px;
-	font-size: 30px;
+	min-width: 100px;
+	font-size: 25px;
 	justify-content: center;
 	align-items: center;
 `;
