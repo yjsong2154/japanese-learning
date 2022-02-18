@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import data from './data.js';
 
 function App() {
+	const [ OriginalDict, setOriginalDict ] = useState(data['hiragana']);
 	const [ dict, setDict ] = useState(data['hiragana']);
 	const [ ranLetter, setRanLetter ] = useState('あ');
 	const [ ans, setAns ] = useState('');
@@ -15,12 +16,16 @@ function App() {
 		() => {
 			nextLetter();
 		},
-		[ dict ]
+		[ OriginalDict ]
 	);
 
 	const nextLetter = () => {
 		var letterArr = Object.keys(dict);
-		setRanLetter(letterArr[Math.floor(Math.random() * Object.keys(dict).length)]);
+		if (letterArr.length === 0) {
+			setRanLetter('끝');
+		} else {
+			setRanLetter(letterArr[Math.floor(Math.random() * Object.keys(dict).length)]);
+		}
 	};
 
 	const handleButtonClick = (e) => {
@@ -28,9 +33,16 @@ function App() {
 			if (dict[ranLetter] === ans) {
 				setAnsColor('forestgreen');
 				setIsCorrect('정답');
+				delCorrect();
 			} else {
-				setAnsColor('crimson');
-				setIsCorrect('오답 : ' + dict[ranLetter]);
+				if (Object.keys(dict).length === 0) {
+					setAnsColor('forestgreen');
+					setIsCorrect('확인을 눌러주세요');
+					setDict(OriginalDict);
+				} else {
+					setAnsColor('crimson');
+					setIsCorrect('오답 : ' + dict[ranLetter]);
+				}
 			}
 			setIsShow(true);
 		} else {
@@ -40,8 +52,15 @@ function App() {
 		}
 	};
 
+	const delCorrect = () => {
+		const tempDict = { ...dict };
+		delete tempDict[ranLetter];
+		setDict(tempDict);
+	};
+
 	const handleDict = (e) => {
-		setDict(data[e.target.id], console.log(dict));
+		setOriginalDict(data[e.target.id]);
+		setDict(data[e.target.id]);
 		setIsShow(false);
 		setAns('');
 	};
@@ -60,6 +79,9 @@ function App() {
 		<Background>
 			<Title>일본어 연습기</Title>
 			<SelectBox>
+				{/* <SelectButton id="test" onClick={handleDict}>
+					Test
+				</SelectButton> */}
 				<SelectButton id="hiragana" onClick={handleDict}>
 					히라가나
 				</SelectButton>
