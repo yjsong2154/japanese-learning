@@ -78,6 +78,7 @@ function App() {
 	return (
 		<Background>
 			<Title>일본어 연습기</Title>
+			<Title>{Object.keys(dict).length}개 남음</Title>
 			<SelectBox>
 				{/* <SelectButton id="test" onClick={handleDict}>
 					Test
@@ -87,6 +88,14 @@ function App() {
 				</SelectButton>
 				<SelectButton id="gatagana" onClick={handleDict}>
 					가타가나
+				</SelectButton>
+			</SelectBox>
+			<SelectBox>
+				<SelectButton id="N5_mean" onClick={handleDict}>
+					N5 한자 의미
+				</SelectButton>
+				<SelectButton id="N5_pro" onClick={handleDict}>
+					N5 한자 발음
 				</SelectButton>
 			</SelectBox>
 			<Letter>{ranLetter}</Letter>
@@ -115,6 +124,7 @@ const Title = styled.div`
 	font-size: 20px;
 	justify-content: center;
 	align-items: center;
+	margin-bottom: auto;
 `;
 
 const SelectBox = styled.div`
@@ -161,6 +171,7 @@ const InputBox = styled.div`
 	width: 100%;
 	justify-content: center;
 	align-items: center;
+	margin-bottom: auto;
 `;
 
 const Input = styled.input`
