@@ -78,7 +78,6 @@ function App() {
 	return (
 		<Background>
 			<Title>일본어 연습기</Title>
-			<Title>{Object.keys(dict).length}개 남음</Title>
 			<SelectBox>
 				{/* <SelectButton id="test" onClick={handleDict}>
 					Test
@@ -89,15 +88,42 @@ function App() {
 				<SelectButton id="gatagana" onClick={handleDict}>
 					가타가나
 				</SelectButton>
+				<SelectButton id="N5_mean" onClick={handleDict}>
+					N5 의미
+				</SelectButton>
+				<SelectButton id="N5_pro" onClick={handleDict}>
+					N5 발음
+				</SelectButton>
 			</SelectBox>
 			<SelectBox>
 				<SelectButton id="N5_mean" onClick={handleDict}>
-					N5 한자 의미
+					N4 의미
 				</SelectButton>
 				<SelectButton id="N5_pro" onClick={handleDict}>
-					N5 한자 발음
+					N4 발음
+				</SelectButton>
+				<SelectButton id="N5_mean" onClick={handleDict}>
+					N3 의미
+				</SelectButton>
+				<SelectButton id="N5_pro" onClick={handleDict}>
+					N3 발음
 				</SelectButton>
 			</SelectBox>
+			<SelectBox>
+				<SelectButton id="N5_mean" onClick={handleDict}>
+					N2 의미
+				</SelectButton>
+				<SelectButton id="N5_pro" onClick={handleDict}>
+					N2 발음
+				</SelectButton>
+				<SelectButton id="N5_mean" onClick={handleDict}>
+					N1 의미
+				</SelectButton>
+				<SelectButton id="N5_pro" onClick={handleDict}>
+					N1 발음
+				</SelectButton>
+			</SelectBox>
+			<Title>{Object.keys(dict).length}개 남음</Title>
 			<Letter>{ranLetter}</Letter>
 			<Correct color={ansColor}>{isShow ? isCorrect : ''}</Correct>
 			<InputBox>
@@ -111,10 +137,8 @@ function App() {
 const Background = styled.div`
 	display: flex;
 	flex-direction: column;
-	height: 100%;
 	width: 100%;
 	justify-content: center;
-	align-items: start;
 `;
 
 const Title = styled.div`
@@ -139,7 +163,7 @@ const SelectBox = styled.div`
 const SelectButton = styled.button`
 	display: flex;
 	height: 40px;
-	width: 25%;
+	width: 20%;
 	font-size: 20px;
 	justify-content: center;
 	align-items: center;
@@ -147,7 +171,7 @@ const SelectButton = styled.button`
 
 const Letter = styled.div`
 	display: flex;
-	height: 40%;
+	height: 160px;
 	width: 100%;
 	font-size: 70px;
 	justify-content: center;
