@@ -1,3 +1,7 @@
+// 누적, 단일 구현
+// 다크모드로 만들기
+// 데이터 형식 변했으니까 그거 바꾸기 - 보여주는 거랑 정답이랑 다름
+
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import styled from 'styled-components';
@@ -169,15 +173,6 @@ const SelectBox = styled.div`
 	flex-direction: row;
 	height: 60px;
 	width: 100%;
-	justify-content: center;
-	align-items: center;
-`;
-
-const SelectButton = styled.button`
-	display: flex;
-	height: 40px;
-	width: 20%;
-	font-size: 20px;
 	justify-content: center;
 	align-items: center;
 `;
