@@ -4,13 +4,16 @@ import styled from 'styled-components';
 import data from './data.js';
 
 function App() {
-	const [ OriginalDict, setOriginalDict ] = useState(data['hiragana']);
-	const [ dict, setDict ] = useState(data['hiragana']);
+	const [ OriginalDict, setOriginalDict ] = useState(data['hiragana'][1]);
+	const [ dict, setDict ] = useState(data['hiragana'][1]);
 	const [ ranLetter, setRanLetter ] = useState('あ');
 	const [ ans, setAns ] = useState('');
 	const [ isCorrect, setIsCorrect ] = useState('');
 	const [ ansColor, setAnsColor ] = useState('forestgreen');
 	const [ isShow, setIsShow ] = useState(false);
+	const [ firstDropdown, setFirstDropdown ] = useState('hiragana');
+	const [ secondDropdown, setSecondDropdown ] = useState(1);
+	const [ lastDay, setLastDay ] = useState(localStorage.getItem('lastDay') || '없음');
 
 	useEffect(
 		() => {
@@ -19,9 +22,28 @@ function App() {
 		[ OriginalDict ]
 	);
 
+	useEffect(
+		() => {
+			localStorage.setItem('lastDay', lastDay);
+		},
+		[ lastDay ]
+	);
+
+	const handleFirstChange = (event) => {
+		setFirstDropdown(event.target.value);
+	};
+
+	const handleSecondChange = (event) => {
+		setSecondDropdown(event.target.value);
+	};
+
 	const nextLetter = () => {
 		var letterArr = Object.keys(dict);
 		if (letterArr.length === 0) {
+			if (firstDropdown !== 'hiragana' && firstDropdown !== 'katakana') {
+				const first = firstDropdown.slice(0, 2);
+				setLastDay(first + ' ' + secondDropdown + '일차');
+			}
 			setRanLetter('끝');
 		} else {
 			setRanLetter(letterArr[Math.floor(Math.random() * Object.keys(dict).length)]);
@@ -59,8 +81,13 @@ function App() {
 	};
 
 	const handleDict = (e) => {
-		setOriginalDict(data[e.target.id]);
-		setDict(data[e.target.id]);
+		if (firstDropdown !== 'hiragana' && firstDropdown !== 'katakana') {
+			setOriginalDict(data[firstDropdown][secondDropdown]);
+			setDict(data[firstDropdown][secondDropdown]);
+		} else {
+			setOriginalDict(data[firstDropdown][1]);
+			setDict(data[firstDropdown][1]);
+		}
 		setIsShow(false);
 		setAns('');
 	};
@@ -78,51 +105,37 @@ function App() {
 	return (
 		<Background>
 			<Title>일본어 연습기</Title>
+			<Title>진도 : {lastDay}</Title>
+
 			<SelectBox>
-				{/* <SelectButton id="test" onClick={handleDict}>
-					Test
-				</SelectButton> */}
-				<SelectButton id="hiragana" onClick={handleDict}>
-					히라가나
-				</SelectButton>
-				<SelectButton id="gatagana" onClick={handleDict}>
-					가타가나
-				</SelectButton>
-				<SelectButton id="N5_mean" onClick={handleDict}>
-					N5 의미
-				</SelectButton>
-				<SelectButton id="N5_pro" onClick={handleDict}>
-					N5 발음
-				</SelectButton>
+				<select value={firstDropdown} onChange={handleFirstChange} style={{ marginRight: '10px', fontSize: '20px' }}>
+					<option value="hiragana">히라가나</option>
+					<option value="katakana">가타가나</option>
+					<option value="N1_mean">N1 의미</option>
+					<option value="N1_pron">N1 발음</option>
+					<option value="N2_mean">N2 의미</option>
+					<option value="N2_pron">N2 발음</option>
+					<option value="N3_mean">N3 의미</option>
+					<option value="N3_pron">N3 발음</option>
+					<option value="N4_mean">N4 의미</option>
+					<option value="N4_pron">N4 발음</option>
+					<option value="N5_mean">N5 의미</option>
+					<option value="N5_pron">N5 발음</option>
+				</select>
+
+				<select value={secondDropdown} onChange={handleSecondChange} style={{ marginRight: '10px', fontSize: '20px' }}>
+					{Array.from({ length: 30 }, (_, i) => (
+						<option key={i + 1} value={i + 1}>
+							{i + 1} 일차
+						</option>
+					))}
+				</select>
+
+				<button onClick={handleDict} style={{ fontSize: '20px' }}>
+					선택
+				</button>
 			</SelectBox>
-			<SelectBox>
-				<SelectButton id="N5_mean" onClick={handleDict}>
-					N4 의미
-				</SelectButton>
-				<SelectButton id="N5_pro" onClick={handleDict}>
-					N4 발음
-				</SelectButton>
-				<SelectButton id="N5_mean" onClick={handleDict}>
-					N3 의미
-				</SelectButton>
-				<SelectButton id="N5_pro" onClick={handleDict}>
-					N3 발음
-				</SelectButton>
-			</SelectBox>
-			<SelectBox>
-				<SelectButton id="N5_mean" onClick={handleDict}>
-					N2 의미
-				</SelectButton>
-				<SelectButton id="N5_pro" onClick={handleDict}>
-					N2 발음
-				</SelectButton>
-				<SelectButton id="N5_mean" onClick={handleDict}>
-					N1 의미
-				</SelectButton>
-				<SelectButton id="N5_pro" onClick={handleDict}>
-					N1 발음
-				</SelectButton>
-			</SelectBox>
+
 			<Title>{Object.keys(dict).length}개 남음</Title>
 			<Letter>{ranLetter}</Letter>
 			<Correct color={ansColor}>{isShow ? isCorrect : ''}</Correct>
