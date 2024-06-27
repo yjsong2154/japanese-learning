@@ -1,7 +1,3 @@
-// 누적, 단일 구현
-// 다크모드로 만들기
-// 데이터 형식 변했으니까 그거 바꾸기 - 보여주는 거랑 정답이랑 다름
-
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import styled from 'styled-components';
@@ -46,7 +42,12 @@ function App() {
 		if (letterArr.length === 0) {
 			if (firstDropdown !== 'hiragana' && firstDropdown !== 'katakana') {
 				const first = firstDropdown.slice(0, 2);
-				setLastDay(first + ' ' + secondDropdown + '일차');
+				if (secondDropdown > 30) {
+					const stackDay = secondDropdown - 30;
+					setLastDay(first + ' ' + stackDay + '일차');
+				} else {
+					setLastDay(first + ' ' + secondDropdown + '일차');
+				}
 			}
 			setRanLetter('끝');
 		} else {
@@ -56,7 +57,7 @@ function App() {
 
 	const handleButtonClick = (e) => {
 		if (!isShow) {
-			if (dict[ranLetter] === ans) {
+			if (dict[ranLetter][0].includes(ans.split(' ').join(''))) {
 				setAnsColor('forestgreen');
 				setIsCorrect('정답');
 				delCorrect();
@@ -67,7 +68,11 @@ function App() {
 					setDict(OriginalDict);
 				} else {
 					setAnsColor('crimson');
-					setIsCorrect('오답 : ' + dict[ranLetter]);
+					if (dict[ranLetter][1]) {
+						setIsCorrect('오답 : ' + dict[ranLetter][1]);
+					} else {
+						setIsCorrect('오답 : ' + dict[ranLetter][0][0]);
+					}
 				}
 			}
 			setIsShow(true);
@@ -85,9 +90,18 @@ function App() {
 	};
 
 	const handleDict = (e) => {
-		if (firstDropdown !== 'hiragana' && firstDropdown !== 'katakana') {
+		if (firstDropdown !== 'hiragana' && firstDropdown !== 'katakana' && secondDropdown < 31) {
 			setOriginalDict(data[firstDropdown][secondDropdown]);
 			setDict(data[firstDropdown][secondDropdown]);
+		} else if (firstDropdown !== 'hiragana' && firstDropdown !== 'katakana' && secondDropdown > 30) {
+			let combined = {};
+			for (let i = 1; i <= secondDropdown - 30; i++) {
+				if (data[firstDropdown][i]) {
+					combined = { ...combined, ...data[firstDropdown][i] };
+				}
+			}
+			setOriginalDict(combined);
+			setDict(combined);
 		} else {
 			setOriginalDict(data[firstDropdown][1]);
 			setDict(data[firstDropdown][1]);
@@ -108,11 +122,22 @@ function App() {
 
 	return (
 		<Background>
-			<Title>일본어 연습기</Title>
-			<Title>진도 : {lastDay}</Title>
+			<Title>일본어 단어장</Title>
+			<Title>진도 : {lastDay} </Title>
 
 			<SelectBox>
-				<select value={firstDropdown} onChange={handleFirstChange} style={{ marginRight: '10px', fontSize: '20px' }}>
+				<select
+					value={firstDropdown}
+					onChange={handleFirstChange}
+					style={{
+						marginRight: '10px',
+						fontSize: '20px',
+						background: '#111',
+						color: '#f7f7f7',
+						height: '40px',
+						width: '150px'
+					}}
+				>
 					<option value="hiragana">히라가나</option>
 					<option value="katakana">가타가나</option>
 					<option value="N1_mean">N1 의미</option>
@@ -127,15 +152,34 @@ function App() {
 					<option value="N5_pron">N5 발음</option>
 				</select>
 
-				<select value={secondDropdown} onChange={handleSecondChange} style={{ marginRight: '10px', fontSize: '20px' }}>
+				<select
+					value={secondDropdown}
+					onChange={handleSecondChange}
+					style={{
+						marginRight: '10px',
+						fontSize: '20px',
+						background: '#111',
+						color: '#f7f7f7',
+						height: '40px',
+						width: '150px'
+					}}
+				>
 					{Array.from({ length: 30 }, (_, i) => (
 						<option key={i + 1} value={i + 1}>
 							{i + 1} 일차
 						</option>
 					))}
+					{Array.from({ length: 30 }, (_, i) => (
+						<option key={i + 31} value={i + 31}>
+							{i + 1} 일차 누적
+						</option>
+					))}
 				</select>
 
-				<button onClick={handleDict} style={{ fontSize: '20px' }}>
+				<button
+					onClick={handleDict}
+					style={{ fontSize: '20px', background: '#111', color: '#f7f7f7', height: '40px', width: '70px' }}
+				>
 					선택
 				</button>
 			</SelectBox>
@@ -166,6 +210,7 @@ const Title = styled.div`
 	justify-content: center;
 	align-items: center;
 	margin-bottom: auto;
+	margin-top: 10px;
 `;
 
 const SelectBox = styled.div`
@@ -215,6 +260,8 @@ const Input = styled.input`
 	font-size: 30px;
 	justify-content: center;
 	align-items: center;
+	background-color: #111;
+	color: #f7f7f7;
 `;
 
 const Button = styled.button`
@@ -226,6 +273,8 @@ const Button = styled.button`
 	font-size: 25px;
 	justify-content: center;
 	align-items: center;
+	background-color: #111;
+	color: #f7f7f7;
 `;
 
 export default App;
