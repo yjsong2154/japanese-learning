@@ -1,3 +1,5 @@
+// 배포 npm run deploy
+
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import styled from 'styled-components';
