@@ -104,9 +104,12 @@ function App() {
 			}
 			setOriginalDict(combined);
 			setDict(combined);
-		} else {
+		} else if (secondDropdown < 31) {
 			setOriginalDict(data[firstDropdown][1]);
 			setDict(data[firstDropdown][1]);
+		} else {
+			setOriginalDict(data[firstDropdown][2]);
+			setDict(data[firstDropdown][2]);
 		}
 		setIsShow(false);
 		setAns('');
