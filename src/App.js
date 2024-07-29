@@ -92,7 +92,11 @@ function App() {
 	};
 
 	const handleDict = (e) => {
-		if (firstDropdown !== 'hiragana' && firstDropdown !== 'katakana' && secondDropdown < 31) {
+		if (firstDropdown !== 'hiragana' && firstDropdown !== 'katakana' && secondDropdown === "Re"){
+			setOriginalDict(data[firstDropdown]["Re"]);
+			setDict(data[firstDropdown]["Re"]);
+		}
+		else if (firstDropdown !== 'hiragana' && firstDropdown !== 'katakana' && secondDropdown < 31) {
 			setOriginalDict(data[firstDropdown][secondDropdown]);
 			setDict(data[firstDropdown][secondDropdown]);
 		} else if (firstDropdown !== 'hiragana' && firstDropdown !== 'katakana' && secondDropdown > 30) {
@@ -179,6 +183,8 @@ function App() {
 							{i + 1} 일차 누적
 						</option>
 					))}
+
+					<option value="Re">복습</option>
 				</select>
 
 				<button
